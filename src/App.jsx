@@ -108,7 +108,7 @@ function App() {
             <audio
               ref={audioRef}
               controls
-              controlsList="nodownload noplaybackrate"
+              controlsList="nodownload"
               onContextMenu={(e) => e.preventDefault()}
               className="w-full rounded-lg shadow-md"
             >
