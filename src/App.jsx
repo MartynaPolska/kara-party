@@ -119,19 +119,49 @@ function App() {
               Your browser does not support the audio element.
             </audio>
 
-            {/* Font Size Control */}
-            <div className="flex justify-end mb-2">
-              <select
-                className="px-2 py-1 rounded text-sm text-black"
-                value={fontSize}
-                onChange={(e) => setFontSize(e.target.value)}
-              >
-                <option value="1rem">Small</option>
-                <option value="1.2rem">Medium</option>
-                <option value="1.5rem">Large</option>
-                <option value="1.8rem">XL</option>
-              </select>
+            {/* Player Controls Underneath Progress */}
+            <div className="flex justify-between items-center mt-2 gap-2">
+              {/* Playback Speed Control */}
+              <div className="flex items-center gap-1 text-sm">
+                <span role="img" aria-label="slow">🐢</span>
+                {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
+                  <button
+                    key={rate}
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.playbackRate = rate;
+                      }
+                    }}
+                    className="px-2 py-1 bg-indigo-100 rounded text-indigo-700 hover:bg-indigo-200 text-xs"
+                  >
+                    {rate}x
+                  </button>
+                ))}
+                <span role="img" aria-label="fast">🐇</span>
+              </div>
+
+              {/* Font Size Control */}
+              <div className="flex items-center gap-2 text-sm">
+                <span>🔤</span>
+                {[
+                  { label: 'S', value: '1rem' },
+                  { label: 'M', value: '1.2rem' },
+                  { label: 'L', value: '1.5rem' },
+                  { label: 'XL', value: '1.8rem' }
+                ].map((size) => (
+                  <button
+                    key={size.value}
+                    onClick={() => setFontSize(size.value)}
+                    className={`px-2 py-1 rounded ${
+                      fontSize === size.value ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-800'
+                    } hover:bg-indigo-300 text-xs`}
+                  >
+                    {size.label}
+                  </button>
+                ))}
+              </div>
             </div>
+
 
             {/* Lyrics Area */}
             <div
