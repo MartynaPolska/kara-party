@@ -28,7 +28,7 @@ function App() {
     }
   }, [currentTime]);
 
-  // 🔥 FIX: Reload and play audio on song change
+  // Reload and play audio on song change
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -101,50 +101,67 @@ function App() {
       {/* Main Player Area */}
       <div className="flex-1 ml-4 bg-white text-black rounded-xl p-6 shadow-xl overflow-y-auto">
         <h2 className="text-3xl font-bold text-indigo-700 mb-1">{selectedSong.title}</h2>
-        <p className="text-sm text-gray-500 mb-2">{selectedSong.artist} • {selectedSong.genre}</p>
+        <p className="text-sm text-gray-500 mb-4">{selectedSong.artist} • {selectedSong.genre}</p>
 
-        {/* Album Cover */}
-        {selectedSong.coverImage && (
-          <img
-            src={selectedSong.coverImage}
-            alt={`${selectedSong.title} cover`}
-            className="w-full max-h-60 object-cover rounded-xl mb-4 shadow-md"
-          />
-        )}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Left: Player + Lyrics */}
+          <div className="flex-1 space-y-4">
+            {/* Audio Player */}
+            <audio
+              ref={audioRef}
+              controls
+              controlsList="nodownload noplaybackrate"
+              onContextMenu={(e) => e.preventDefault()}
+              className="w-full rounded-lg shadow-md"
+            >
+              <source src={selectedSong.audioUrl} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
 
-        {/* Audio Player */}
-        <audio
-          ref={audioRef}
-          controls
-          controlsList="nodownload noplaybackrate"
-          onContextMenu={(e) => e.preventDefault()}
-          className="w-full mb-4"
-        >
-          <source src={selectedSong.audioUrl} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
-
-        {/* Lyrics */}
-        {selectedSong.syncedLyrics ? (
-          <div ref={lyricsRef} className="max-h-[60vh] overflow-y-auto bg-gray-100 rounded-md p-4 text-gray-800 space-y-1">
-            {selectedSong.syncedLyrics.map((line, idx) => {
-              const activeIdx = getActiveLyricIndex(selectedSong.syncedLyrics);
-              const isActive = idx === activeIdx;
-              return (
-                <div
-                  key={idx}
-                  className={`transition-all duration-300 ${isActive ? 'text-indigo-600 font-semibold active-lyric' : 'text-gray-700'}`}
-                >
-                  {line.text}
-                </div>
-              );
-            })}
+            {/* Lyrics */}
+            <div
+              ref={lyricsRef}
+              className="max-h-[60vh] overflow-y-auto bg-gray-100 rounded-md p-4 text-gray-800 space-y-1"
+            >
+              {selectedSong.syncedLyrics ? (
+                selectedSong.syncedLyrics.map((line, idx) => {
+                  const activeIdx = getActiveLyricIndex(selectedSong.syncedLyrics);
+                  const isActive = idx === activeIdx;
+                  return (
+                    <div
+                      key={idx}
+                      className={`transition-all duration-300 ${
+                        isActive ? 'text-indigo-600 font-semibold active-lyric' : 'text-gray-700'
+                      }`}
+                    >
+                      {line.text}
+                    </div>
+                  );
+                })
+              ) : (
+                <pre className="whitespace-pre-wrap text-gray-800">
+                  {selectedSong.lyrics || "No lyrics available."}
+                </pre>
+              )}
+            </div>
           </div>
-        ) : (
-          <pre className="whitespace-pre-wrap bg-gray-100 p-4 rounded-md text-gray-800">
-            {selectedSong.lyrics || "No lyrics available."}
-          </pre>
-        )}
+
+          {/* Right: Album Cover + Ad Placeholder */}
+          <div className="w-full lg:w-[500px] flex flex-col items-center gap-4">
+            {selectedSong.coverImage && (
+              <img
+                src={selectedSong.coverImage}
+                alt={`${selectedSong.title} cover`}
+                className="w-full max-w-[500px] rounded-xl shadow-lg object-cover"
+              />
+            )}
+
+            {/* 🔲 Ad Space */}
+            <div className="w-full max-w-[500px] h-32 bg-white/30 border-2 border-dashed border-white rounded-lg flex items-center justify-center text-white text-sm">
+              🔲 Ad or Promo Space
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
