@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import songs from './songs';
+import { Turtle, Rabbit } from 'lucide-react';
+
 
 function App() {
   const [selectedSong, setSelectedSong] = useState(songs[0]);
@@ -123,22 +125,23 @@ function App() {
             <div className="flex justify-between items-center mt-2 gap-2">
               {/* Playback Speed Control */}
               <div className="flex items-center gap-1 text-sm">
-                <span role="img" aria-label="slow">🐢</span>
-                {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
-                  <button
-                    key={rate}
-                    onClick={() => {
-                      if (audioRef.current) {
-                        audioRef.current.playbackRate = rate;
-                      }
-                    }}
-                    className="px-2 py-1 bg-indigo-100 rounded text-indigo-700 hover:bg-indigo-200 text-xs"
-                  >
-                    {rate}x
-                  </button>
-                ))}
-                <span role="img" aria-label="fast">🐇</span>
-              </div>
+              <Turtle className="w-5 h-5 text-indigo-600" />
+              {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
+                <button
+                  key={rate}
+                  onClick={() => {
+                    if (audioRef.current) {
+                      audioRef.current.playbackRate = rate;
+                    }
+                  }}
+                  className="px-2 py-1 bg-indigo-100 rounded text-indigo-700 hover:bg-indigo-200 text-xs"
+                >
+                  {rate}x
+                </button>
+              ))}
+              <Rabbit className="w-5 h-5 text-indigo-600" />
+            </div>
+
 
               {/* Font Size Control */}
               <div className="flex items-center gap-2 text-sm">
