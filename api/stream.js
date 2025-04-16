@@ -14,24 +14,30 @@ export default async function handler(req, res) {
   if (!url) return res.status(404).send("Audio not found");
 
   try {
-    // Forward range request
-    const range = req.headers.range;
-    const headers = {
-      Range: range || "bytes=0-",
-    };
+    const range = req.headers.range || "bytes=0-";
 
-    const response = await fetch(url, { headers });
-
-    if (!response.ok && response.status !== 206) {
-      return res.status(response.status).send("Failed to fetch audio xxxxxx");
-    }
-
-    // Pass headers from Firebase response
-    response.headers.forEach((value, key) => {
-      res.setHeader(key, value);
+    const response = await fetch(url, {
+      headers: {
+        Range: range,
+      },
     });
 
-    res.status(response.status);
+    if (!response.ok && response.status !== 206) {
+      return res.status(response.status).send("Error fetching audio");
+    }
+
+    // Copy relevant headers for streaming & seeking
+    res.setHeader('Content-Type', 'audio/mpeg');
+    if (response.headers.has('content-range')) {
+      res.setHeader('Content-Range', response.headers.get('content-range'));
+      res.setHeader('Accept-Ranges', 'bytes');
+      res.setHeader('Content-Length', response.headers.get('content-length'));
+      res.status(206); // Partial content
+    } else {
+      res.setHeader('Content-Length', response.headers.get('content-length'));
+      res.status(200); // Full content
+    }
+
     response.body.pipe(res);
   } catch (err) {
     console.error("Stream error:", err);

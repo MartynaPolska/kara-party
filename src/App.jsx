@@ -6,11 +6,12 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [currentTime, setCurrentTime] = useState(0);
-  const [fontSize, setFontSize] = useState('1.2rem'); // ⬅️ Font size state
+  const [fontSize, setFontSize] = useState('1.2rem');
 
   const audioRef = useRef(null);
   const lyricsRef = useRef(null);
 
+  // Sync current time with player
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -19,6 +20,7 @@ function App() {
     return () => audio.removeEventListener('timeupdate', updateTime);
   }, [selectedSong]);
 
+  // Scroll to active lyric line
   useEffect(() => {
     if (lyricsRef.current) {
       const active = lyricsRef.current.querySelector('.active-lyric');
@@ -27,19 +29,6 @@ function App() {
       }
     }
   }, [currentTime]);
-
-  <audio
-  ref={audioRef}
-  controls
-  controlsList="nodownload"
-  onContextMenu={(e) => e.preventDefault()}
-  className="w-full rounded-lg shadow-md"
->
-  <source key={selectedSong.audioUrl} src={selectedSong.audioUrl} type="audio/mpeg" />
-  Your browser does not support the audio element.
-</audio>
-
-  
 
   const genres = ['All', ...new Set(songs.map(song => song.genre))];
 
@@ -92,7 +81,10 @@ function App() {
               className={`p-3 rounded-md cursor-pointer transition ${
                 selectedSong === song ? 'bg-white text-black font-bold' : 'bg-white/20 hover:bg-white/30'
               }`}
-              onClick={() => setSelectedSong(song)}
+              onClick={() => {
+                setCurrentTime(0);
+                setSelectedSong(song);
+              }}
             >
               <div>{song.title}</div>
               <div className="text-sm text-gray-300">{song.artist}</div>
@@ -102,7 +94,7 @@ function App() {
         </div>
       </div>
 
-      {/* Main Player Section */}
+      {/* Main Area */}
       <div className="flex-1 ml-4 bg-white text-black rounded-xl p-6 shadow-xl overflow-y-auto">
         <h2 className="text-3xl font-bold text-indigo-700 mb-1">{selectedSong.title}</h2>
         <p className="text-sm text-gray-500 mb-4">{selectedSong.artist} • {selectedSong.genre}</p>
@@ -110,7 +102,9 @@ function App() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left: Audio + Lyrics */}
           <div className="flex-1 space-y-4">
+            {/* Audio Player */}
             <audio
+              key={selectedSong.audioUrl} // 👈 important to re-render on song switch
               ref={audioRef}
               controls
               controlsList="nodownload"
@@ -176,7 +170,6 @@ function App() {
               />
             )}
 
-            {/* Ad Placeholder */}
             <div className="w-full max-w-[500px] h-32 bg-white/30 border-2 border-dashed border-white rounded-lg flex items-center justify-center text-white text-sm">
               🔲 Ad or Promo Space
             </div>
