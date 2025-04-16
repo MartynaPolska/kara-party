@@ -145,7 +145,7 @@ function App() {
 
               {/* Font Size Control */}
               <div className="flex items-center gap-2 text-sm">
-                <span>🔤</span>
+                <span>Aa</span>
                 {[
                   { label: 'S', value: '1rem' },
                   { label: 'M', value: '1.2rem' },
