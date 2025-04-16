@@ -92,7 +92,12 @@ function App() {
         <h2 className="text-3xl font-bold text-indigo-700 mb-1">{selectedSong.title}</h2>
         <p className="text-sm text-gray-500 mb-4">{selectedSong.artist} • {selectedSong.genre}</p>
 
-        <audio controls ref={audioRef} className="w-full mb-4">
+        <audio ref={audioRef}
+          controls
+          controlsList="nodownload noplaybackrate"
+          onContextMenu={(e) => e.preventDefault()}
+          className="w-full mb-4"
+        >
           <source src={selectedSong.audioUrl} type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
