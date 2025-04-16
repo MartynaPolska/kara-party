@@ -28,14 +28,17 @@ function App() {
     }
   }, [currentTime]);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-  
-    // Set new source by changing key, so audio element resets
-    audio.src = selectedSong.audioUrl;
-    audio.load();
-  }, [selectedSong]);
+  <audio
+  ref={audioRef}
+  controls
+  controlsList="nodownload"
+  onContextMenu={(e) => e.preventDefault()}
+  className="w-full rounded-lg shadow-md"
+>
+  <source key={selectedSong.audioUrl} src={selectedSong.audioUrl} type="audio/mpeg" />
+  Your browser does not support the audio element.
+</audio>
+
   
 
   const genres = ['All', ...new Set(songs.map(song => song.genre))];
