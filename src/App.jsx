@@ -9,6 +9,7 @@ function App() {
   const audioRef = useRef(null);
   const lyricsRef = useRef(null);
 
+  // Sync current time while playing
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -17,6 +18,7 @@ function App() {
     return () => audio.removeEventListener('timeupdate', updateTime);
   }, [selectedSong]);
 
+  // Scroll to active lyric line
   useEffect(() => {
     if (lyricsRef.current) {
       const active = lyricsRef.current.querySelector('.active-lyric');
@@ -25,6 +27,15 @@ function App() {
       }
     }
   }, [currentTime]);
+
+  // 🔥 FIX: Reload and play audio on song change
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+      audioRef.current.play().catch(() => {}); // handles autoplay errors silently
+    }
+  }, [selectedSong]);
 
   const genres = ['All', ...new Set(songs.map(song => song.genre))];
 
@@ -92,7 +103,8 @@ function App() {
         <h2 className="text-3xl font-bold text-indigo-700 mb-1">{selectedSong.title}</h2>
         <p className="text-sm text-gray-500 mb-4">{selectedSong.artist} • {selectedSong.genre}</p>
 
-        <audio ref={audioRef}
+        <audio
+          ref={audioRef}
           controls
           controlsList="nodownload noplaybackrate"
           onContextMenu={(e) => e.preventDefault()}
@@ -128,3 +140,5 @@ function App() {
 }
 
 export default App;
+
+// 🔥 FIX: working well
