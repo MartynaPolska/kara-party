@@ -1,10 +1,18 @@
+/* Center the app */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
+/* Optional global styling */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #0f172a;
+  color: white;
+}
+
+/* Animated logo (optional, can remove if unused) */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -33,10 +41,12 @@
   }
 }
 
+/* Optional card padding */
 .card {
   padding: 2em;
 }
 
+/* Optional help text */
 .read-the-docs {
   color: #888;
 }

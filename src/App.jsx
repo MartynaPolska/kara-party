@@ -6,10 +6,11 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [currentTime, setCurrentTime] = useState(0);
+  const [fontSize, setFontSize] = useState('1.2rem'); // ⬅️ Font size state
+
   const audioRef = useRef(null);
   const lyricsRef = useRef(null);
 
-  // Sync current time while playing
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -18,7 +19,6 @@ function App() {
     return () => audio.removeEventListener('timeupdate', updateTime);
   }, [selectedSong]);
 
-  // Scroll to active lyric line
   useEffect(() => {
     if (lyricsRef.current) {
       const active = lyricsRef.current.querySelector('.active-lyric');
@@ -28,7 +28,6 @@ function App() {
     }
   }, [currentTime]);
 
-  // Reload and play audio on song change
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -59,7 +58,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-indigo-800 to-purple-900 text-white p-4 font-sans flex">
-      {/* Left Sidebar */}
+      {/* Sidebar */}
       <div className="w-full sm:w-1/3 lg:w-1/4 bg-white/10 rounded-xl p-4 space-y-4 overflow-y-auto">
         <h1 className="text-2xl font-bold mb-2 text-white">🎤 KaraParty</h1>
 
@@ -98,15 +97,14 @@ function App() {
         </div>
       </div>
 
-      {/* Main Player Area */}
+      {/* Main Player Section */}
       <div className="flex-1 ml-4 bg-white text-black rounded-xl p-6 shadow-xl overflow-y-auto">
         <h2 className="text-3xl font-bold text-indigo-700 mb-1">{selectedSong.title}</h2>
         <p className="text-sm text-gray-500 mb-4">{selectedSong.artist} • {selectedSong.genre}</p>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left: Player + Lyrics */}
+          {/* Left: Audio + Lyrics */}
           <div className="flex-1 space-y-4">
-            {/* Audio Player */}
             <audio
               ref={audioRef}
               controls
@@ -118,10 +116,29 @@ function App() {
               Your browser does not support the audio element.
             </audio>
 
+            {/* Font Size Control */}
+            <div className="flex justify-end mb-2">
+              <select
+                className="px-2 py-1 rounded text-sm text-black"
+                value={fontSize}
+                onChange={(e) => setFontSize(e.target.value)}
+              >
+                <option value="1rem">Small</option>
+                <option value="1.2rem">Medium</option>
+                <option value="1.5rem">Large</option>
+                <option value="1.8rem">XL</option>
+              </select>
+            </div>
+
             {/* Lyrics */}
             <div
               ref={lyricsRef}
-              className="max-h-[60vh] overflow-y-auto bg-gray-100 rounded-md p-4 text-gray-800 space-y-1"
+              className="max-h-[60vh] overflow-y-auto bg-gray-100 rounded-md p-4 text-gray-800 space-y-2 mx-auto"
+              style={{
+                fontSize: fontSize,
+                maxWidth: '500px',
+                textAlign: 'left',
+              }}
             >
               {selectedSong.syncedLyrics ? (
                 selectedSong.syncedLyrics.map((line, idx) => {
@@ -139,14 +156,12 @@ function App() {
                   );
                 })
               ) : (
-                <pre className="whitespace-pre-wrap text-gray-800">
-                  {selectedSong.lyrics || "No lyrics available."}
-                </pre>
+                <pre>No lyrics available.</pre>
               )}
             </div>
           </div>
 
-          {/* Right: Album Cover + Ad Placeholder */}
+          {/* Right: Album Cover + Ad */}
           <div className="w-full lg:w-[500px] flex flex-col items-center gap-4">
             {selectedSong.coverImage && (
               <img
@@ -156,7 +171,7 @@ function App() {
               />
             )}
 
-            {/* 🔲 Ad Space */}
+            {/* Ad Placeholder */}
             <div className="w-full max-w-[500px] h-32 bg-white/30 border-2 border-dashed border-white rounded-lg flex items-center justify-center text-white text-sm">
               🔲 Ad or Promo Space
             </div>
