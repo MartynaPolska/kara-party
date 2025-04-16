@@ -33,7 +33,7 @@ function App() {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.load();
-      audioRef.current.play().catch(() => {}); // handles autoplay errors silently
+      audioRef.current.play().catch(() => {});
     }
   }, [selectedSong]);
 
@@ -101,8 +101,18 @@ function App() {
       {/* Main Player Area */}
       <div className="flex-1 ml-4 bg-white text-black rounded-xl p-6 shadow-xl overflow-y-auto">
         <h2 className="text-3xl font-bold text-indigo-700 mb-1">{selectedSong.title}</h2>
-        <p className="text-sm text-gray-500 mb-4">{selectedSong.artist} • {selectedSong.genre}</p>
+        <p className="text-sm text-gray-500 mb-2">{selectedSong.artist} • {selectedSong.genre}</p>
 
+        {/* Album Cover */}
+        {selectedSong.coverImage && (
+          <img
+            src={selectedSong.coverImage}
+            alt={`${selectedSong.title} cover`}
+            className="w-full max-h-60 object-cover rounded-xl mb-4 shadow-md"
+          />
+        )}
+
+        {/* Audio Player */}
         <audio
           ref={audioRef}
           controls
@@ -114,6 +124,7 @@ function App() {
           Your browser does not support the audio element.
         </audio>
 
+        {/* Lyrics */}
         {selectedSong.syncedLyrics ? (
           <div ref={lyricsRef} className="max-h-[60vh] overflow-y-auto bg-gray-100 rounded-md p-4 text-gray-800 space-y-1">
             {selectedSong.syncedLyrics.map((line, idx) => {
@@ -140,5 +151,3 @@ function App() {
 }
 
 export default App;
-
-// 🔥 FIX: working well

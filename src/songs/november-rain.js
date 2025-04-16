@@ -4,6 +4,7 @@ const novemberRain = {
     artist: "Sandi Thom",
     genre: "Rock",
     audioUrl: "/api/stream?id=november-rain",
+    coverImage: "/covers/november-rain.jpg",
     syncedLyrics: [
       { time: 2.72, text: "When I look into your eyes" },
       { time: 8.59, text: "I can see a love restrained" },

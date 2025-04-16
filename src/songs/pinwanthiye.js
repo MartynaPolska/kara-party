@@ -4,6 +4,7 @@ const pinwanthiye = {
     artist: "Sangeeth Wijesooriya",
     genre: "Sinhala Classic",
     audioUrl: "/api/stream?id=pinwanthiye",
+    coverImage: "/covers/pinwanthiye.jpg",
     syncedLyrics: [
       { time: 1.73, text: "පින්වන්තියේ මාගේ ප්‍රේම කතාවේ" },
       { time: 4.52, text: "ඇයිදෝ මට පාවෙ මල් මද හාසේ" },
