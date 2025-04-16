@@ -29,12 +29,14 @@ function App() {
   }, [currentTime]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.load();
-      audioRef.current.play().catch(() => {});
-    }
+    const audio = audioRef.current;
+    if (!audio) return;
+  
+    // Set new source by changing key, so audio element resets
+    audio.src = selectedSong.audioUrl;
+    audio.load();
   }, [selectedSong]);
+  
 
   const genres = ['All', ...new Set(songs.map(song => song.genre))];
 
