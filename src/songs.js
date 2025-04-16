@@ -3,7 +3,7 @@ const songs = [
       title: "November Rain",
       artist: "Sandi Thom",
       genre: "Rock",
-      audioUrl: "https://firebasestorage.googleapis.com/v0/b/kara-party-lk.firebasestorage.app/o/november-rain-cover.mp3?alt=media&token=3c08b1ed-17af-4939-84cc-e722b1b3875f",
+      audioUrl: "/api/stream?id=november-rain",
       syncedLyrics: [
         { time: 2.72, text: "When I look into your eyes" },
         { time: 8.59, text: "I can see a love restrained" },
@@ -38,7 +38,7 @@ const songs = [
       title: "What Was I Made For?",
       artist: "Billie Eilish",
       genre: "Pop",
-      audioUrl: "https://firebasestorage.googleapis.com/v0/b/kara-party-lk.firebasestorage.app/o/What-Was-I-Made-For%20-Billie%20Eilish.mp3?alt=media&token=b3450d92-22e1-46f3-bc3a-b50625fc6c82",
+      audioUrl: "/api/stream?id=what-was-i-made-for",
       lyrics: `I don't know how to feel
   But I wanna try
   I don't know how to feel
@@ -48,7 +48,7 @@ const songs = [
       title: "Pinwanthiye Mage",
       artist: "Unknown Artist",
       genre: "Sinhala Classic",
-      audioUrl: "https://firebasestorage.googleapis.com/v0/b/kara-party-lk.firebasestorage.app/o/Pinwanthiye%20Mage.mp3?alt=media&token=8474d722-4b2c-47b6-b46d-e5e145a08396",
+      audioUrl: "/api/stream?id=pinwanthiye",
       lyrics: `Pinwanthiye mage piyamban
   Wetha nopenena oba sanda wanaran...`
     },
@@ -56,7 +56,7 @@ const songs = [
       title: "Obe Sina Laga",
       artist: "Nuwandika Senarathne",
       genre: "Sinhala",
-      audioUrl: "https://firebasestorage.googleapis.com/v0/b/kara-party-lk.firebasestorage.app/o/obe-sina-laga-nuwandika-senarathne.mp3?alt=media&token=81e4675b-eaf8-416d-8677-99a2117b2038",
+      audioUrl: "/api/stream?id=obe-sina",
       lyrics: `Obe sina laga oba duka kada
   Mage pema oba samaga wada...`
     }
