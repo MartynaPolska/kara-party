@@ -7,11 +7,13 @@ function App() {
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [currentTime, setCurrentTime] = useState(0);
   const [fontSize, setFontSize] = useState('1.2rem');
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
 
   const audioRef = useRef(null);
   const lyricsRef = useRef(null);
+  const scrollTimer = useRef(null);
 
-  // Sync current time with player
+  // Update currentTime for synced lyrics
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -20,15 +22,17 @@ function App() {
     return () => audio.removeEventListener('timeupdate', updateTime);
   }, [selectedSong]);
 
-  // Scroll to active lyric line
+  // Scroll to active lyric unless user is scrolling
   useEffect(() => {
+    if (isUserScrolling) return;
+
     if (lyricsRef.current) {
       const active = lyricsRef.current.querySelector('.active-lyric');
       if (active) {
         active.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
-  }, [currentTime]);
+  }, [currentTime, isUserScrolling]);
 
   const genres = ['All', ...new Set(songs.map(song => song.genre))];
 
@@ -104,7 +108,7 @@ function App() {
           <div className="flex-1 space-y-4">
             {/* Audio Player */}
             <audio
-              key={selectedSong.audioUrl} // 👈 important to re-render on song switch
+              key={selectedSong.audioUrl}
               ref={audioRef}
               controls
               controlsList="nodownload"
@@ -129,9 +133,16 @@ function App() {
               </select>
             </div>
 
-            {/* Lyrics */}
+            {/* Lyrics Area */}
             <div
               ref={lyricsRef}
+              onScroll={() => {
+                setIsUserScrolling(true);
+                clearTimeout(scrollTimer.current);
+                scrollTimer.current = setTimeout(() => {
+                  setIsUserScrolling(false);
+                }, 5000); // 5 seconds after scroll stops
+              }}
               className="max-h-[60vh] overflow-y-auto bg-gray-100 rounded-md p-4 text-gray-800 space-y-2 mx-auto"
               style={{
                 fontSize: fontSize,
