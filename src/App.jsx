@@ -150,7 +150,14 @@ function App() {
             <div className="flex justify-between items-center mt-2 gap-2 flex-wrap">
               
               <div className="flex items-center gap-2 text-sm">
+
                 <span className="text-2xl font-semibold text-indigo-600">Aa</span>
+
+
+                <span>Aa</span>
+
+                <span className="text-2xl font-semibold text-indigo-600">Aa</span>
+
                 {[
                   { label: 'S', value: '1rem' },
                   { label: 'M', value: '1.2rem' },
