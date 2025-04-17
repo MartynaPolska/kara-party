@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import songs from './songs';
 import CustomAudioPlayer from './components/CustomAudioPlayer';
-import { Turtle, Rabbit } from 'lucide-react';
+import MobileAudioPlayer from './components/MobileAudioPlayer'; // ✅ Import
+import useIsMobile from './hooks/useIsMobile'; // ✅ Hook for screen size detection
 
 function App() {
   const [selectedSong, setSelectedSong] = useState(songs[0]);
@@ -11,6 +12,8 @@ function App() {
   const [currentTime, setCurrentTime] = useState(0);
   const [fontSize, setFontSize] = useState('1.2rem');
   const [isUserScrolling, setIsUserScrolling] = useState(false);
+
+  const isMobile = useIsMobile(); // ✅ Detect if mobile
 
   const audioRef = useRef(null);
   const lyricsRef = useRef(null);
@@ -130,15 +133,23 @@ function App() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left: Player + Lyrics */}
           <div className="flex-1 space-y-4">
-            
-            {/* Custom Audio Player */}
-            <CustomAudioPlayer
-              audioRef={audioRef}
-              currentTime={currentTime}
-              setCurrentTime={setCurrentTime}
-            />
 
-            {/* Hidden HTML Audio Tag */}
+            {/* 🔁 Conditionally render player */}
+            {isMobile ? (
+              <MobileAudioPlayer
+                audioRef={audioRef}
+                currentTime={currentTime}
+                setCurrentTime={setCurrentTime}
+              />
+            ) : (
+              <CustomAudioPlayer
+                audioRef={audioRef}
+                currentTime={currentTime}
+                setCurrentTime={setCurrentTime}
+              />
+            )}
+
+            {/* Hidden Audio */}
             <audio
               ref={audioRef}
               src={selectedSong.audioUrl}
@@ -146,18 +157,12 @@ function App() {
               className="hidden"
             />
 
-            {/* Font Size + Speed Controls */}
+            {/* Font Size Control */}
             <div className="flex justify-between items-center mt-2 gap-2 flex-wrap">
-              
               <div className="flex items-center gap-2 text-sm">
-
                 <span className="text-2xl font-semibold text-indigo-600">Aa</span>
-
-
                 <span>Aa</span>
-
                 <span className="text-2xl font-semibold text-indigo-600">Aa</span>
-
                 {[
                   { label: 'S', value: '1rem' },
                   { label: 'M', value: '1.2rem' },
