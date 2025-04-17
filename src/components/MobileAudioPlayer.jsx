@@ -40,7 +40,11 @@ const MobileAudioPlayer = ({ audioRef, currentTime, setCurrentTime }) => {
 
   const togglePlay = () => {
     if (!audioRef.current) return;
-    isPlaying ? audioRef.current.pause() : audioRef.current.play();
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
   };
 
   const skip = (seconds) => {
@@ -49,21 +53,21 @@ const MobileAudioPlayer = ({ audioRef, currentTime, setCurrentTime }) => {
     setCurrentTime(audioRef.current.currentTime);
   };
 
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
-    audioRef.current.volume = newVolume;
-    setVolume(newVolume);
+  const handleSpeedChange = (rate) => {
+    if (!audioRef.current) return;
+    audioRef.current.playbackRate = rate;
+    setPlaybackRate(rate);
   };
 
-  const handleSpeedChange = (e) => {
-    const newRate = parseFloat(e.target.value);
-    audioRef.current.playbackRate = newRate;
-    setPlaybackRate(newRate);
+  const handleVolumeChange = (value) => {
+    if (!audioRef.current) return;
+    audioRef.current.volume = value;
+    setVolume(value);
   };
 
   return (
-    <div className="w-full bg-gradient-to-br from-indigo-800 to-indigo-500 text-white rounded-lg p-4 flex flex-col gap-3">
-      {/* Progress */}
+    <div className="w-full bg-gradient-to-r from-indigo-700 to-indigo-500 rounded-xl p-4 shadow-lg text-white space-y-4">
+      {/* Progress Bar */}
       <input
         type="range"
         min={0}
@@ -74,70 +78,73 @@ const MobileAudioPlayer = ({ audioRef, currentTime, setCurrentTime }) => {
           audioRef.current.currentTime = newTime;
           setCurrentTime(newTime);
         }}
-        className="w-full accent-white h-1 cursor-pointer"
+        className="w-full accent-white h-2"
       />
 
-      {/* Core Controls */}
-      <div className="flex items-center justify-center gap-6">
-        <button onClick={() => skip(-10)} title="Rewind">
-          <Rewind size={26} />
+      {/* Main Controls */}
+      <div className="flex justify-center items-center gap-6">
+        <button onClick={() => skip(-10)} aria-label="Rewind 10 seconds">
+          <Rewind size={24} />
         </button>
 
         <button
           onClick={togglePlay}
-          className="bg-white text-black rounded-full p-3"
-          title={isPlaying ? 'Pause' : 'Play'}
+          className="bg-white text-black rounded-full p-3 hover:scale-105 transition"
+          aria-label={isPlaying ? 'Pause' : 'Play'}
         >
           {isPlaying ? <Pause size={24} /> : <Play size={24} />}
         </button>
 
-        <button onClick={() => skip(10)} title="Forward">
-          <FastForward size={26} />
+        <button onClick={() => skip(10)} aria-label="Forward 10 seconds">
+          <FastForward size={24} />
         </button>
       </div>
 
-      {/* Expandable Settings */}
-      <div className="mt-2 text-sm text-center">
+      {/* Toggle Settings */}
+      <div className="flex justify-end">
         <button
           onClick={() => setShowSettings(!showSettings)}
-          className="flex items-center justify-center gap-2 text-indigo-300"
+          className="flex items-center gap-2 text-sm text-white hover:text-indigo-200"
         >
-          Settings <ChevronDown size={16} className={`transition-transform ${showSettings ? 'rotate-180' : ''}`} />
+          <ChevronDown size={16} className={`transition-transform ${showSettings ? 'rotate-180' : ''}`} />
+          More Options
         </button>
-
-        {showSettings && (
-          <div className="mt-3 space-y-3">
-            {/* Speed */}
-            <div className="flex items-center gap-2">
-              <Gauge size={18} />
-              <input
-                type="range"
-                min={0.75}
-                max={1.5}
-                step={0.25}
-                value={playbackRate}
-                onChange={handleSpeedChange}
-                className="accent-white w-full h-1"
-              />
-              <span className="text-sm w-12 text-right">{playbackRate.toFixed(2)}x</span>
-            </div>
-
-            {/* Volume */}
-            <div className="flex items-center gap-2">
-              <Volume2 size={18} />
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.01}
-                value={volume}
-                onChange={handleVolumeChange}
-                className="accent-white w-full h-1"
-              />
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Settings Panel */}
+      {showSettings && (
+        <div className="flex flex-col gap-4">
+          {/* Speed */}
+          <div className="flex items-center gap-4">
+            <Gauge size={20} />
+            {[0.75, 1, 1.5].map((rate) => (
+              <button
+                key={rate}
+                onClick={() => handleSpeedChange(rate)}
+                className={`px-2 py-1 rounded text-sm ${
+                  playbackRate === rate ? 'bg-white text-black font-semibold' : 'bg-indigo-300 text-white'
+                }`}
+              >
+                {rate}x
+              </button>
+            ))}
+          </div>
+
+          {/* Volume */}
+          <div className="flex items-center gap-4">
+            <Volume2 size={20} />
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={volume}
+              onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+              className="w-full accent-white"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
