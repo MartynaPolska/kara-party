@@ -21,22 +21,15 @@ const MobileApp = ({
   setIsUserScrolling,
   isSidebarOpen,
   setIsSidebarOpen,
-  getActiveLyricIndex
+  getActiveLyricIndex,
+  scrollTimer,
 }) => {
   return (
-    <div className="w-full mb-4 space-y-4 relative">
-      {selectedSong.coverImage && (
-        <img
-          src={selectedSong.coverImage}
-          alt={`${selectedSong.title} cover`}
-          className="w-full max-w-[100%] rounded-xl shadow-lg object-cover"
-        />
-      )}
-
-      {/* Floating hamburger */}
+    <div className="w-full mb-4 space-y-4 relative min-h-screen px-2 pt-4">
+      {/* ✅ Floating Hamburger Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="absolute top-4 right-4 z-50 p-2 rounded-md bg-white/20 backdrop-blur-md hover:bg-white/30 transition"
+        className="fixed top-4 right-4 z-50 p-2 rounded-md bg-white/20 backdrop-blur-md hover:bg-white/30 transition"
         aria-label="Toggle menu"
       >
         <svg
@@ -50,8 +43,18 @@ const MobileApp = ({
         </svg>
       </button>
 
+      {/* ✅ Cover Image */}
+      {selectedSong.coverImage && (
+        <img
+          src={selectedSong.coverImage}
+          alt={`${selectedSong.title} cover`}
+          className="w-full max-w-full rounded-xl shadow-lg object-cover"
+        />
+      )}
+
+      {/* ✅ Sidebar content (toggleable) */}
       {isSidebarOpen && (
-        <div className="bg-white/10 p-4 rounded-lg space-y-4">
+        <div className="bg-white/10 p-4 rounded-lg space-y-4 mt-2">
           <input
             type="text"
             placeholder="🔍 Search songs..."
@@ -82,7 +85,8 @@ const MobileApp = ({
         </div>
       )}
 
-      <div className="space-y-2">
+      {/* ✅ Song list */}
+      <div className="space-y-2 mt-4">
         {filteredSongs.map((song, idx) => (
           <div
             key={idx}
@@ -102,12 +106,14 @@ const MobileApp = ({
         ))}
       </div>
 
+      {/* ✅ Audio Player */}
       <MobileAudioPlayer
         audioRef={audioRef}
         currentTime={currentTime}
         setCurrentTime={setCurrentTime}
       />
 
+      {/* ✅ Hidden audio element */}
       <audio
         key={selectedSong.audioUrl}
         ref={audioRef}
@@ -116,7 +122,7 @@ const MobileApp = ({
         className="hidden"
       />
 
-      {/* Lyrics */}
+      {/* ✅ Lyrics Viewer */}
       <div
         ref={lyricsRef}
         onScroll={() => {
